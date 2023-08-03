@@ -2,10 +2,9 @@ package uk.gov.nationalarchives.tre
 
 import io.circe.generic.semiauto.deriveEncoder
 import io.circe.generic.auto._
-import io.circe.{Decoder, Encoder, parser}
+import io.circe.{Decoder, Encoder}
 import uk.gov.nationalarchives.common.messages.{Producer, Properties}
-import uk.gov.nationalarchives.da.messages.courtdocumentpackage.available.{CourtDocumentPackageAvailable, Status}
-import uk.gov.nationalarchives.tre.messages.treerror.TreError
+import uk.gov.nationalarchives.tre.messages.treerror.{Status, TreError}
 
 object MessageParsingUtils {
   // Sample codecs for CourtDocumentPackageAvailable
@@ -14,9 +13,5 @@ object MessageParsingUtils {
   implicit val producerDecoder: Decoder[Producer.Value] = Decoder.decodeEnumeration(Producer)
   implicit val statusEncoder: Encoder[Status.Value] = Encoder.encodeEnumeration(Status)
   implicit val statusDecoder: Decoder[Status.Value] = Decoder.decodeEnumeration(Status)
-
-  TreError
-  // Example TRE message parsing
-  def parseCourtDocumentPackageAvailableMessage(message: String): CourtDocumentPackageAvailable =
-    parser.decode[CourtDocumentPackageAvailable](message).fold(error => throw new RuntimeException(error), identity)
+  implicit val treErrorEncoder: Encoder[TreError] = deriveEncoder[TreError]
 }
