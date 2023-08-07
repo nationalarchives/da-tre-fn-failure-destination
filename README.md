@@ -1,4 +1,4 @@
-# da-tre-fn-template
+# da-tre-fn-failure-destination
 A template repository with a skeleton scala handlers for a range of event types, a workflow for pushing images to ECR, and some simple examples of message parsing and testing.
 
 The template lambda is generically typed to demonstrate handling of a selection of common events, but both event and return type can be configured as required.
