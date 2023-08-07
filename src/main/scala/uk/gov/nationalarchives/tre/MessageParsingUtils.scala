@@ -1,7 +1,8 @@
 package uk.gov.nationalarchives.tre
 
-import io.circe.generic.semiauto.deriveEncoder
 import io.circe.generic.auto._
+import io.circe.generic.semiauto.deriveEncoder
+import io.circe.syntax.EncoderOps
 import io.circe.{Decoder, Encoder}
 import uk.gov.nationalarchives.common.messages.{Producer, Properties}
 import uk.gov.nationalarchives.tre.messages.treerror.{Status, TreError}
@@ -13,4 +14,6 @@ object MessageParsingUtils {
   implicit val statusEncoder: Encoder[Status.Value] = Encoder.encodeEnumeration(Status)
   implicit val statusDecoder: Decoder[Status.Value] = Decoder.decodeEnumeration(Status)
   implicit val treErrorEncoder: Encoder[TreError] = deriveEncoder[TreError]
+
+  def toJsonString(treError: TreError) = treError.asJson.toString
 }

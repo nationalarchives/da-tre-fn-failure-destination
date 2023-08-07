@@ -1,15 +1,15 @@
 package uk.gov.nationalarchives.tre
 
-import MessageParsingUtils._
 import com.amazonaws.services.lambda.runtime.events.LambdaDestinationEvent
 import com.amazonaws.services.lambda.runtime.{Context, RequestHandler}
-import io.circe.syntax.EncoderOps
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sns.SnsClient
 import software.amazon.awssdk.services.sns.model.PublishRequest
 import uk.gov.nationalarchives.common.messages.Producer.TRE
 import uk.gov.nationalarchives.common.messages.Properties
+import uk.gov.nationalarchives.tre.Lambda.buildTreErrorMessage
 import uk.gov.nationalarchives.tre.messages.treerror.{Parameters, Status, TreError}
+
 import java.time.Instant
 import java.util.UUID
 
@@ -19,7 +19,25 @@ class Lambda extends RequestHandler[LambdaDestinationEvent, Unit] {
   private lazy val topicOption = sys.env.get("TRE_INTERNAL_TOPIC_ARN")
 
   override def handleRequest(event: LambdaDestinationEvent, context: Context): Unit = {
-    val errorMessage = TreError(
+    context.getLogger.log(s"Building error message from destination event: $event\n")
+    val errorMessage = buildTreErrorMessage(event)
+    topicOption match {
+      case Some(internalPublishingTopic) =>
+        context.getLogger.log(s"Publishing tre error message to internal publishing topic")
+        val snsClient = SnsClient.builder().region(region).build()
+        val request =
+          PublishRequest.builder.message(MessageParsingUtils.toJsonString(errorMessage))
+            .topicArn(internalPublishingTopic).build
+        snsClient.publish(request)
+      case None =>
+        context.getLogger.log("No internal publishing topic set")
+    }
+  }
+}
+
+object Lambda {
+  def buildTreErrorMessage(event: LambdaDestinationEvent): TreError = {
+    TreError(
       properties = Properties(
         messageType = "uk.gov.nationalarchives.tre.messages.treerror.TreError",
         function = "da-tre-fn-failure-destination",
@@ -34,20 +52,16 @@ class Lambda extends RequestHandler[LambdaDestinationEvent, Unit] {
         reference = "",
         errors = Some(
           s"""
-            |Arrived at failure destination with error details:
-            |
-            |${event.getResponsePayload}
-            |
-            |Upstream request payload:
-            |
-            |${event.getRequestPayload}
-            |""".stripMargin
+             |Arrived at failure destination with error details:
+             |
+             |${event.getResponsePayload}
+             |
+             |Upstream request payload:
+             |
+             |${event.getRequestPayload}
+             |""".stripMargin
         )
       )
     )
-    val snsClient = SnsClient.builder().region(region).build()
-    val topic = topicOption.get
-    val request = PublishRequest.builder.message(errorMessage.asJson.toString).topicArn(topic).build
-    snsClient.publish(request)
   }
 }
