@@ -16,21 +16,21 @@ import java.util.UUID
 class Lambda extends RequestHandler[LambdaDestinationEvent, Unit] {
 
   private lazy val region = Region.EU_WEST_2
-  private lazy val topicOption = sys.env.get("TRE_INTERNAL_TOPIC_ARN")
+  private lazy val topicOption = sys.env.get("DA_EVENTBUS_TOPIC_ARN")
 
   override def handleRequest(event: LambdaDestinationEvent, context: Context): Unit = {
     context.getLogger.log(s"Building error message from destination event: $event\n")
     val errorMessage = buildTreErrorMessage(event)
     topicOption match {
       case Some(internalPublishingTopic) =>
-        context.getLogger.log(s"Publishing tre error message to internal publishing topic")
+        context.getLogger.log(s"Publishing tre error message to event bus publishing topic")
         val snsClient = SnsClient.builder().region(region).build()
         val request =
           PublishRequest.builder.message(MessageParsingUtils.toJsonString(errorMessage))
             .topicArn(internalPublishingTopic).build
         snsClient.publish(request)
       case None =>
-        context.getLogger.log("No internal publishing topic set")
+        context.getLogger.log("No event bus publishing topic set")
     }
   }
 }
