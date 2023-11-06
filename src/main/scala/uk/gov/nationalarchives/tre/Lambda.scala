@@ -55,7 +55,7 @@ object Lambda {
              |Arrived at failure destination with error details:
              |
              |${event.getResponsePayload}
-          """
+             |""".stripMargin
         )
       )
     )
