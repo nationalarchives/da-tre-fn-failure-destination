@@ -12,4 +12,4 @@ Sample feature and unit test for noop logging handlers are provided for each eve
 An on push workflow is provided which versions, tags, and pushes to ECR an image built from the latest code.
 
 ## Message parsing
-Example parsing utils are supplied for `CourtDocumentPackage` : the precise circe codecs required will need adapting depending on types nested in parameters of the TRE message in question.
+Example parsing utils are supplied for `CourtDocumentPackages` : the precise circe codecs required will need adapting depending on types nested in parameters of the TRE message in question.
