@@ -24,7 +24,7 @@ libraryDependencies ++= Seq(
   "io.cucumber" % "cucumber-junit" % "7.15.0" % Test,
   "io.cucumber" % "cucumber-core" % "7.15.0" % Test,
   "com.github.sbt" % "junit-interface" % "0.13.3" % Test,
-  "org.scalatest" %% "scalatest" % "3.2.17" % Test,
+  "org.scalatest" %% "scalatest" % "3.2.18" % Test,
   "org.scalatestplus" %% "mockito-4-11" % "3.2.17.0" % Test,
   "uk.gov.nationalarchives" % "da-transform-schemas" % "2.5",
   "com.amazonaws" % "aws-lambda-java-events" % "3.11.4",
