@@ -20,7 +20,7 @@ assemblyMergeStrategy in assembly := {
 }
 
 libraryDependencies ++= Seq(
-  "io.cucumber" %% "cucumber-scala" % "8.20.0" % Test,
+  "io.cucumber" %% "cucumber-scala" % "8.21.1" % Test,
   "io.cucumber" % "cucumber-junit" % "7.16.1" % Test,
   "io.cucumber" % "cucumber-core" % "7.16.1" % Test,
   "com.github.sbt" % "junit-interface" % "0.13.3" % Test,
