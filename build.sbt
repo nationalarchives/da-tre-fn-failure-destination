@@ -32,7 +32,7 @@ libraryDependencies ++= Seq(
   "software.amazon.awssdk" % "sns" % awsVersion,
   "software.amazon.awssdk" % "sso" % awsVersion,
   "software.amazon.awssdk" % "ssooidc" % awsVersion,
-  "io.circe" %% "circe-generic-extras" % "0.14.3"
+  "io.circe" %% "circe-generic-extras" % "0.14.4"
 )
 
 
