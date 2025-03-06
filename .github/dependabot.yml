@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    ignore:
+      - dependency-name: "sbtscala/scala-sbt"
+        versions:
+          - "eclipse-temurin-21.0.6_7_1.10.10_3.6.3"
